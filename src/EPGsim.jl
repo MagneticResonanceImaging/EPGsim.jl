@@ -1,5 +1,4 @@
 module EPGsim
 
-# Write your package code here.
-
+include("RegularEPG.jl")
 end

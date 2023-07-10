@@ -1,6 +1,8 @@
 using EPGsim
 using Test
+using ForwardDiff
 
 @testset "EPGsim.jl" begin
-    # Write your tests here.
+    include("EPG/test_regular.jl")
+    include("test_AD.jl")
 end
