@@ -1,8 +1,6 @@
 using ForwardDiff
 
 function MESE_EPG(T2,T1,TE,ETL,delta)
-  # initial states for the dephased (f) and longitudinal (z) magnetization.
-  # the magnetization after the RF pulse is described by f_deph and z_deph.
   T = eltype(complex(T2))
   E = EPGStates([T(0.0)],[T(0.0)],[T(1.0)])
   echo_vec = Vector{Complex{eltype(T2)}}()
