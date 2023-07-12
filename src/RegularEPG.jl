@@ -5,11 +5,23 @@ mutable struct EPGStates{T <: Real}
   Fp::Vector{Complex{T}}
   Fn::Vector{Complex{T}}
   Z::Vector{Complex{T}}
+  
+  function EPGStates(Fp::Vector{Complex{S}},Fn::Vector{Complex{S}},Z::Vector{Complex{S}}) where {S <: Real}
+     if Fp[1] != conj(Fn[1])
+      error("Fp[1] should be complex conjugate to Fn[1]")
+     end
+     if imag(Z[1]) != 0
+      error("imaginary part of Z[1] should be equal to 0")
+     end
+     
+     return new{S}(Fp,Fn,Z)
+  end
 end
 
 
 function EPGStates(Fp::T=0,Fn::T=0,Z::T=1) where T <: Number
   T2 = ComplexF64
+
   return EPGStates(T2.([Fp]),T2.([Fn]),T2.([Z]))
 end
 
@@ -94,8 +106,8 @@ applies Bloch-rotation (<=> RF pulse) to a set of EPG states.
 
 # Arguments
 * `E::EPGStates``
-* `alpha::Float64`           - flip angle of the RF pulse
-* `phi::Float64=0.0`         - phase of the RF pulse
+* `alpha::Float64`           - flip angle of the RF pulse (rad)
+* `phi::Float64=0.0`         - phase of the RF pulse (rad)
 """
 function epgRotation(E::EPGStates, alpha::Real, phi::Real=0.0)
   # apply rotation to all states per default

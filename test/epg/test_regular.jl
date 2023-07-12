@@ -3,7 +3,13 @@
   E=EPGStates()
   @test E.Fp == [0] && E.Fn == [0] && E.Z == [1]
 
+  # test initialization
+
+  @test_throws "Fp[1] should be complex conjugate to Fn[1]" E=EPGStates(1+2im,1+0im,1+0im)
+  @test_throws "imaginary part of Z[1] should be equal to 0" E=EPGStates(1+2im,1-2im,1+2im)
+ 
   # test pulse
+  E=EPGStates()
   E = epgRotation(E,deg2rad(47),deg2rad(23))
   @test getStates(E) ≈ [
       0.2857626571584661 - im*0.6732146319308543, 
