@@ -2,7 +2,7 @@ using EPGsim
 using Documenter, Literate
 
 # Generates examples with literate (removed)
-include("generate_lit.jl")
+#include("generate_lit.jl")
 
 DocMeta.setdocmeta!(EPGsim, :DocTestSetup, :(using EPGsim); recursive=true)
 
@@ -21,7 +21,7 @@ makedocs(;
     pages=[
         "Home" => "index.md",
         "Regular EPG " => "regular.md",
-        "Test literate" => "generated/01-autoDiff.md", # generated from literate
+        #"Test literate" => "generated/01-autoDiff.md", # generated from literate
         "Automatic Differentiation" => "AD.md",
         "API" => "API.md",
         
