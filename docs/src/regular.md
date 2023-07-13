@@ -35,6 +35,9 @@ or directly by passing `Vector{Complex{T}} where {T <: Real}` which means it can
 T = ComplexF32
 E = EPGStates(T.([0.5+0.5im,1]),T.([0.5-0.5im,0]),T.([1,0]))
 ```
+!!! Note
+    Julia is a one based indexing language.
+    Fp[1]/Fn[1]/Z[1] store the echo and correspond to the states commonly named $F_0^+$ / $F_0^-$ $Z_0$
 
 !!! warning
     the F+[1] and F-[1] states should be complex conjugate and imag(Z[1])=0 
