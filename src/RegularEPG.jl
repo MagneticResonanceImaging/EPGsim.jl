@@ -1,6 +1,23 @@
 export epgDephasing,epgRelaxation,epgRotation,rfRotation
 export EPGStates, getStates
 
+"""
+    EPGStates{T <: Real} 
+
+Stores the EPG states in 3 vectors Fp,Fn and Z.
+
+# Constructors :
+    EPGStates(Fp::Vector{Complex{S}},Fn::Vector{Complex{S}},Z::Vector{Complex{S}}) where {S <: Real}
+    EPGStates(Fp::T=0,Fn::T=0,Z::T=1) where T <: Number
+
+# Fields
+- `Fp::Vector{Complex{T}}`
+- `Fn::Vector{Complex{T}}`
+- `Z::Vector{Complex{T}}`
+
+# Related functions
+- `getStates(E::EPGStates)` : extract EPG states as matrix 3xN
+"""
 mutable struct EPGStates{T <: Real} 
   Fp::Vector{Complex{T}}
   Fn::Vector{Complex{T}}
@@ -18,7 +35,11 @@ mutable struct EPGStates{T <: Real}
   end
 end
 
+"""
+    getStates(E::EPGStates)
 
+Extract EPG states as matrix 3xN
+"""
 function EPGStates(Fp::T=0,Fn::T=0,Z::T=1) where T <: Number
   T2 = ComplexF64
 
@@ -33,8 +54,9 @@ end
     epgDephasing(E::EPGStates, n=1) where T
   
 shifts the transverse dephasing states `F` corresponding to n dephasing-cycles.
+n can be any integer
 """
-function epgDephasing(E::EPGStates, n=1)
+function epgDephasing(E::EPGStates, n::Int=1)
   
   if(abs(n)>1)
     for i in 1:abs(n)
@@ -88,9 +110,13 @@ function epgRelaxation(E::EPGStates,t,T1, T2)
 end
 
 """
-    rfRotation_AT(alpha, phi=0.)
+    rfRotation(alpha, phi=0.)
 
 returns the rotation matrix for a pulse with flip angle `alpha` and phase `phi`.
+
+  # Arguments
+* `alpha`  - flip angle (radian)
+* `phi=0.` - phase of the flip angle (radian)
 """
 function rfRotation(alpha, phi=0.)
   R = [ cos(alpha/2.)^2   exp(2*im*phi)*sin(alpha/2.)^2   -im*exp(im*phi)*sin(alpha);

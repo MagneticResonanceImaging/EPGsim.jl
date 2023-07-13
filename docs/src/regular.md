@@ -54,6 +54,10 @@ E = epgDephasing(E,1)
 E = epgRotation(E,deg2rad(60),deg2rad(117))
 ```
 
+!!! note
+    Currently, all the EPGstates are stored and used for calculation. 
+    The states equal or really close to zero are not deleted
+
 # Accessing states
 States can seen directly as a vector :
 ```@example Regular

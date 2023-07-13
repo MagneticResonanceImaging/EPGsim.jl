@@ -8,8 +8,10 @@
 
 This package is inspired by [SYCOMORE](https://sycomore.readthedocs.io/) with the intention to use Automatic differentiation (with ForwardDiff.jl)
 
+Take a look at the [documentation](https://atrotier.github.io/EPGsim.jl/dev/).
+
 ## TO DO list :
-- Delete states with amplitude < defined threshold
--  discrete / discrete 3D
+- Delete states with amplitude < defined threshold or number of states (implemented in epgDephasing ??)
+- discrete / discrete 3D
 - Diffusion
-- Magnetization transfer
+- Magnetization Transfer

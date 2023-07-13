@@ -111,6 +111,36 @@ lines!(ax,TE_vec,df)
 f
 ```
 
+## Differentiation along multiple variables
+If we want to obtain the derivation along T1 and T2 we need to change the EPG_MESE function. The function should take as input a vector containing T2 and T1 (here noted T2/T1) :
+```@example AD
+function MESE_EPG2(T2T1,TE,ETL,delta)
+  T2,T1 = T2T1
+  T = complex(eltype(T2))
+  E = EPGStates([T(0.0)],[T(0.0)],[T(1.0)])
+  echo_vec = Vector{Complex{eltype(T2)}}()
+
+  E = epgRotation(E,pi/2*delta, pi/2)
+  ##loop over refocusing-pulses
+  for i = 1:ETL
+    E = epgDephasing(E,1)
+    E = epgRelaxation(E,TE,T1,T2)
+    E  = epgRotation(E,pi*delta,0.0)
+    E  = epgDephasing(E,1)
+    push!(echo_vec,E.Fp[1])
+  end
+
+  return abs.(echo_vec)
+end
+
+j2 = ForwardDiff.jacobian(x -> MESE_EPG2(x,TE,ETL,deltaB1),[T2,T1])
+```
+Here we can see that the second column corresponding to T1 is equal to 0 which is expected for a MESE sequence and the derivative along T2 gives the same results :
+
+```@example AD
+j2[:,1] ≈ vec(j)
+```
+
 ## Reproducibility
 
 This page was generated with the following version of Julia:

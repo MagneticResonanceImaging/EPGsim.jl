@@ -14,7 +14,7 @@ The principal aspect of this package was to make it compatible with Automatic Di
 !!! note
     EPGsim.jl is work in progress and in some parts not entirely optimized. The interface is susceptible to change between version
 
-## physics concept
+## EPG concept 
 Introduction to the physics concepts behing EPG as well as their usage can be found on the rad229 youtube channels by Brian Hargreaves and Daniel Ennis :
 - [Lecture-04A: Definition of the Extended Phase Graph Basis](https://www.youtube.com/watch?v=bskhnaoJVNY)
 - [Lecture-04B: Sequence Operations in the Extended Phase Graph Domain](https://www.youtube.com/watch?v=kToL-9ZTzCs)
