@@ -68,15 +68,15 @@ function epgDephasing(E::EPGStates, n::Int=1)
     push!(E.Z,0)
 
     if n == 1   
-      E.Fp = circshift(E.Fp,+1)# Shift positive F states right
-      E.Fn = circshift(E.Fn,-1) # Shift negative F* states left
+      E.Fp[:] = circshift(E.Fp,+1)# Shift positive F states right
+      E.Fn[:] = circshift(E.Fn,-1) # Shift negative F* states left
 
       # Update extremal states: F_{+0} using F*_{-0}, F*_{-max+1}=0
       E.Fp[1] = conj(E.Fn[1]);
       E.Fn[end] = 0;
     else # 
-      E.Fp = circshift(E.Fp,-1)# Shift positive F states right
-      E.Fn = circshift(E.Fn,+1) # Shift negative F* states left
+      E.Fp[:] = circshift(E.Fp,-1)# Shift positive F states right
+      E.Fn[:] = circshift(E.Fn,+1) # Shift negative F* states left
 
       # Update extremal states: F_{+0} using F*_{-0}, F*_{-max+1}=0
       E.Fn[1] = conj(E.Fp[1]);
@@ -102,10 +102,8 @@ applies relaxation matrices to a set of EPG states.
 function epgRelaxation(E::EPGStates,t,T1, T2)
   @. E.Fp = exp(-t/T2) * E.Fp
   @. E.Fn = exp(-t/T2) * E.Fn
-  relaxedZ = fill!(copy(E.Z), 0)
-  @. relaxedZ[2:end] = exp(-t/T1) * E.Z[2:end]
-  relaxedZ[1] = exp.(-t./T1) * (E.Z[1]-1.0) + 1.0
-  E.Z = relaxedZ
+  @. E.Z[2:end] = exp(-t/T1) * E.Z[2:end]
+  E.Z[1] = exp.(-t./T1) * (E.Z[1]-1.0) + 1.0
   return E
 end
 
@@ -140,9 +138,32 @@ function epgRotation(E::EPGStates, alpha::Real, phi::Real=0.0)
   n = length(E.Z) # numStates
 
   R = rfRotation(alpha, phi)
+
+  #Estack = [E.Fp E.Fn E.Z]
   for i = 1:n
     E.Fp[i],E.Fn[i],E.Z[i] = R*[E.Fp[i]; E.Fn[i]; E.Z[i]]
   end
 
   return E
 end
+
+"""
+    epgRotation(E::EPGStates, R::Matrix)
+
+applies rotation matrix from `rfRotation` function to the EPGStates
+
+# Arguments
+* `E::EPGStates``
+* `R::Matrix`           - rotation Matrix (rad)
+"""
+function epgRotation(E::EPGStates, R::Matrix)
+  # apply rotation to all states per default
+  n = length(E.Z) # numStates
+
+  for i = 1:n
+    E.Fp[i],E.Fn[i],E.Z[i] = R*[E.Fp[i]; E.Fn[i]; E.Z[i]]
+  end
+
+  return E
+end
+
