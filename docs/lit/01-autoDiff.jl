@@ -62,6 +62,27 @@ lines(TE_vec,df,axis =(;title = "dS/dT2", xlabel="TE [ms]"))
 j = ForwardDiff.jacobian(x -> MESE_EPG(x,T1,TE,ETL,deltaB1),[T2])
 # ## Reproducibility
 
+# ## Derivation along multiple parameters
+function MESE_EPG2(T2T1,TE,ETL,delta)
+  T2,T1 = T2T1
+  T = complex(eltype(T2))
+  E = EPGStates([T(0.0)],[T(0.0)],[T(1.0)])
+  echo_vec = Vector{Complex{eltype(T2)}}()
+
+  E = epgRotation(E,pi/2*delta, pi/2)
+  ##loop over refocusing-pulses
+  for i = 1:ETL
+    E = epgDephasing(E,1)
+    E = epgRelaxation(E,TE,T1,T2)
+    E  = epgRotation(E,pi*delta,0.0)
+    E  = epgDephasing(E,1)
+    push!(echo_vec,E.Fp[1])
+  end
+
+  return abs.(echo_vec)
+end
+
+j2 = ForwardDiff.jacobian(x -> MESE_EPG2(x,TE,ETL,deltaB1),[T2,T1])
 # This page was generated with the following version of Julia:
 using InteractiveUtils
 io = IOBuffer();
