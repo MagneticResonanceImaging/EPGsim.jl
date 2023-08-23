@@ -22,9 +22,9 @@ end
   #amp = MESE_EPG(60.0,1000.0,7,50,1) # Not used
   T2 = 60.0
   T1 = 1000.0
-  TE = 7
+  TE = 7.0
   ETL = 50
-  deltaB1 = 1
+  deltaB1 = 1.0
 
   # analytic gradient
   TE_vec = TE:TE:TE*50
