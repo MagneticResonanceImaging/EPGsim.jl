@@ -1,4 +1,4 @@
-export epgDephasing,epgRelaxation,epgRotation,rfRotation
+export epgDephasing,epgRelaxation,epgRotation,rfRotation,epgThreshold
 export EPGStates, getStates
 
 """
@@ -56,7 +56,7 @@ end
 shifts the transverse dephasing states `F` corresponding to n dephasing-cycles.
 n can be any integer
 """
-function epgDephasing(E::EPGStates, n::Int=1)
+function epgDephasing(E::EPGStates, n::Int=1,threshold::Real=10e-6)
   
   if(abs(n)>1)
     for i in 1:abs(n)
@@ -84,9 +84,29 @@ function epgDephasing(E::EPGStates, n::Int=1)
     end
 
   end
-  
+  E = epgThreshold(E,threshold)
   return E
 end 
+
+#=
+function epgDephasing(E::EPGStates, n::Int,threshold::Real)
+  E = epgDephasing(E, n)
+  E = epgThreshold(E,threshold)
+end
+=#
+function epgThreshold(E::EPGStates,threshold::Real)
+  threshold²=threshold^2
+  for i in length(E.Fp):-1:2
+      if abs.(E.Fp[i]^2 + E.Fn[i]^2 + E.Z[i]^2) < threshold²
+        pop!(E.Fp)
+        pop!(E.Fn)
+        pop!(E.Z)
+      else
+        return E
+      end
+  end
+  return E
+end
 
 """
     epgRelaxation(E::EPGStates,t,T1, T2)
