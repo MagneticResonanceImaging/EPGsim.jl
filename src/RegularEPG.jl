@@ -1,4 +1,5 @@
-export epgDephasing,epgRelaxation,epgRotation,rfRotation
+export epgDephasing!,epgRelaxation!,epgRotation!, epgThreshold!
+export rfRotation
 export EPGStates, getStates
 
 """
@@ -50,17 +51,22 @@ function getStates(E::EPGStates)
     return stack([E.Fp,E.Fn,E.Z],dims=1)
 end
 
+function Base.show(io::IO, E::EPGStates{T} ) where {T}
+  println(io, "EPGStates struct with fields : Fp, Fn, Z")
+  display(getStates(E))
+end
+
 """
-    epgDephasing(E::EPGStates, n=1) where T
+    epgDephasing!(E::EPGStates, n=1) where T
   
 shifts the transverse dephasing states `F` corresponding to n dephasing-cycles.
 n can be any integer
 """
-function epgDephasing(E::EPGStates, n::Int=1)
+function epgDephasing!(E::EPGStates, n::Int=1,threshold::Real=10e-6)
   
   if(abs(n)>1)
     for i in 1:abs(n)
-      E = epgDephasing(E, (n > 0 ? +1 : -1))
+      E = epgDephasing!(E, (n > 0 ? +1 : -1))
     end
   elseif(n == 1 || n == -1)
     push!(E.Fp,0)
@@ -68,15 +74,15 @@ function epgDephasing(E::EPGStates, n::Int=1)
     push!(E.Z,0)
 
     if n == 1   
-      E.Fp = circshift(E.Fp,+1)# Shift positive F states right
-      E.Fn = circshift(E.Fn,-1) # Shift negative F* states left
+      E.Fp[:] = circshift(E.Fp,+1)# Shift positive F states right
+      E.Fn[:] = circshift(E.Fn,-1) # Shift negative F* states left
 
       # Update extremal states: F_{+0} using F*_{-0}, F*_{-max+1}=0
       E.Fp[1] = conj(E.Fn[1]);
       E.Fn[end] = 0;
     else # 
-      E.Fp = circshift(E.Fp,-1)# Shift positive F states right
-      E.Fn = circshift(E.Fn,+1) # Shift negative F* states left
+      E.Fp[:] = circshift(E.Fp,-1)# Shift positive F states right
+      E.Fn[:] = circshift(E.Fn,+1) # Shift negative F* states left
 
       # Update extremal states: F_{+0} using F*_{-0}, F*_{-max+1}=0
       E.Fn[1] = conj(E.Fp[1]);
@@ -84,12 +90,32 @@ function epgDephasing(E::EPGStates, n::Int=1)
     end
 
   end
-  
+  E = epgThreshold!(E,threshold)
   return E
 end 
 
+#=
+function epgDephasing(E::EPGStates, n::Int,threshold::Real)
+  E = epgDephasing(E, n)
+  E = epgThreshold(E,threshold)
+end
+=#
+function epgThreshold!(E::EPGStates,threshold::Real)
+  threshold²=threshold^2
+  for i in length(E.Fp):-1:2
+      if abs.(E.Fp[i]^2 + E.Fn[i]^2 + E.Z[i]^2) < threshold²
+        pop!(E.Fp)
+        pop!(E.Fn)
+        pop!(E.Z)
+      else
+        return E
+      end
+  end
+  return E
+end
+
 """
-    epgRelaxation(E::EPGStates,t,T1, T2)
+    epgRelaxation!(E::EPGStates,t,T1, T2)
 
 applies relaxation matrices to a set of EPG states.
 
@@ -99,13 +125,11 @@ applies relaxation matrices to a set of EPG states.
 * `T1::AbstractFloat`   - T1
 * `T2::AbstractFloat`   - T2
 """
-function epgRelaxation(E::EPGStates,t,T1, T2)
+function epgRelaxation!(E::EPGStates,t,T1, T2)
   @. E.Fp = exp(-t/T2) * E.Fp
   @. E.Fn = exp(-t/T2) * E.Fn
-  relaxedZ = fill!(copy(E.Z), 0)
-  @. relaxedZ[2:end] = exp(-t/T1) * E.Z[2:end]
-  relaxedZ[1] = exp.(-t./T1) * (E.Z[1]-1.0) + 1.0
-  E.Z = relaxedZ
+  @. E.Z[2:end] = exp(-t/T1) * E.Z[2:end]
+  E.Z[1] = exp.(-t./T1) * (E.Z[1]-1.0) + 1.0
   return E
 end
 
@@ -126,7 +150,7 @@ end
 
 
 """
-    epgRotation(E::EPGStates, alpha::Float64, phi::Float64=0.0)
+    epgRotation!(E::EPGStates, alpha::Float64, phi::Float64=0.0)
 
 applies Bloch-rotation (<=> RF pulse) to a set of EPG states.
 
@@ -135,14 +159,31 @@ applies Bloch-rotation (<=> RF pulse) to a set of EPG states.
 * `alpha::Float64`           - flip angle of the RF pulse (rad)
 * `phi::Float64=0.0`         - phase of the RF pulse (rad)
 """
-function epgRotation(E::EPGStates, alpha::Real, phi::Real=0.0)
+function epgRotation!(E::EPGStates, alpha::Real, phi::Real=0.0)
+  R = rfRotation(alpha, phi)
+
+  epgRotation!(E, R)
+
+  return E
+end
+
+"""
+    epgRotation!(E::EPGStates, R::Matrix)
+
+applies rotation matrix from `rfRotation` function to the EPGStates
+
+# Arguments
+* `E::EPGStates``
+* `R::Matrix`           - rotation Matrix (rad)
+"""
+function epgRotation!(E::EPGStates, R::Matrix)
   # apply rotation to all states per default
   n = length(E.Z) # numStates
 
-  R = rfRotation(alpha, phi)
   for i = 1:n
     E.Fp[i],E.Fn[i],E.Z[i] = R*[E.Fp[i]; E.Fn[i]; E.Z[i]]
   end
 
   return E
 end
+

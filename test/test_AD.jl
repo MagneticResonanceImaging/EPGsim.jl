@@ -5,13 +5,13 @@ function MESE_EPG(T2,T1,TE,ETL,delta)
   E = EPGStates([T(0.0)],[T(0.0)],[T(1.0)])
   echo_vec = Vector{Complex{eltype(T2)}}()
 
-  E = epgRotation(E,pi/2*delta, pi/2)
+  epgRotation!(E,pi/2*delta, pi/2)
   # loop over refocusing-pulses
   for i = 1:ETL
-    E = epgDephasing(E,1)
-    E = epgRelaxation(E,TE,T1,T2)
-    E  = epgRotation(E,pi*delta,0.0)
-    E  = epgDephasing(E,1)
+    epgDephasing!(E,1)
+    epgRelaxation!(E,TE,T1,T2)
+    epgRotation!(E,pi*delta,0.0)
+    epgDephasing!(E,1)
     push!(echo_vec,E.Fp[1])
   end
 
@@ -22,9 +22,9 @@ end
   #amp = MESE_EPG(60.0,1000.0,7,50,1) # Not used
   T2 = 60.0
   T1 = 1000.0
-  TE = 7
+  TE = 7.0
   ETL = 50
-  deltaB1 = 1
+  deltaB1 = 1.0
 
   # analytic gradient
   TE_vec = TE:TE:TE*50
