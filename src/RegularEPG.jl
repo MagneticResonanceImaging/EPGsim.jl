@@ -1,4 +1,5 @@
-export epgDephasing,epgRelaxation,epgRotation,rfRotation,epgThreshold
+export epgDephasing!,epgRelaxation!,epgRotation!, epgThreshold!
+export rfRotation
 export EPGStates, getStates
 
 """
@@ -50,17 +51,22 @@ function getStates(E::EPGStates)
     return stack([E.Fp,E.Fn,E.Z],dims=1)
 end
 
+function Base.show(io::IO, E::EPGStates{T} ) where {T}
+  println(io, "EPGStates struct with fields : Fp, Fn, Z")
+  display(getStates(E))
+end
+
 """
-    epgDephasing(E::EPGStates, n=1) where T
+    epgDephasing!(E::EPGStates, n=1) where T
   
 shifts the transverse dephasing states `F` corresponding to n dephasing-cycles.
 n can be any integer
 """
-function epgDephasing(E::EPGStates, n::Int=1,threshold::Real=10e-6)
+function epgDephasing!(E::EPGStates, n::Int=1,threshold::Real=10e-6)
   
   if(abs(n)>1)
     for i in 1:abs(n)
-      E = epgDephasing(E, (n > 0 ? +1 : -1))
+      E = epgDephasing!(E, (n > 0 ? +1 : -1))
     end
   elseif(n == 1 || n == -1)
     push!(E.Fp,0)
@@ -84,7 +90,7 @@ function epgDephasing(E::EPGStates, n::Int=1,threshold::Real=10e-6)
     end
 
   end
-  E = epgThreshold(E,threshold)
+  E = epgThreshold!(E,threshold)
   return E
 end 
 
@@ -94,7 +100,7 @@ function epgDephasing(E::EPGStates, n::Int,threshold::Real)
   E = epgThreshold(E,threshold)
 end
 =#
-function epgThreshold(E::EPGStates,threshold::Real)
+function epgThreshold!(E::EPGStates,threshold::Real)
   threshold²=threshold^2
   for i in length(E.Fp):-1:2
       if abs.(E.Fp[i]^2 + E.Fn[i]^2 + E.Z[i]^2) < threshold²
@@ -109,7 +115,7 @@ function epgThreshold(E::EPGStates,threshold::Real)
 end
 
 """
-    epgRelaxation(E::EPGStates,t,T1, T2)
+    epgRelaxation!(E::EPGStates,t,T1, T2)
 
 applies relaxation matrices to a set of EPG states.
 
@@ -119,7 +125,7 @@ applies relaxation matrices to a set of EPG states.
 * `T1::AbstractFloat`   - T1
 * `T2::AbstractFloat`   - T2
 """
-function epgRelaxation(E::EPGStates,t,T1, T2)
+function epgRelaxation!(E::EPGStates,t,T1, T2)
   @. E.Fp = exp(-t/T2) * E.Fp
   @. E.Fn = exp(-t/T2) * E.Fn
   @. E.Z[2:end] = exp(-t/T1) * E.Z[2:end]
@@ -144,7 +150,7 @@ end
 
 
 """
-    epgRotation(E::EPGStates, alpha::Float64, phi::Float64=0.0)
+    epgRotation!(E::EPGStates, alpha::Float64, phi::Float64=0.0)
 
 applies Bloch-rotation (<=> RF pulse) to a set of EPG states.
 
@@ -153,22 +159,16 @@ applies Bloch-rotation (<=> RF pulse) to a set of EPG states.
 * `alpha::Float64`           - flip angle of the RF pulse (rad)
 * `phi::Float64=0.0`         - phase of the RF pulse (rad)
 """
-function epgRotation(E::EPGStates, alpha::Real, phi::Real=0.0)
-  # apply rotation to all states per default
-  n = length(E.Z) # numStates
-
+function epgRotation!(E::EPGStates, alpha::Real, phi::Real=0.0)
   R = rfRotation(alpha, phi)
 
-  #Estack = [E.Fp E.Fn E.Z]
-  for i = 1:n
-    E.Fp[i],E.Fn[i],E.Z[i] = R*[E.Fp[i]; E.Fn[i]; E.Z[i]]
-  end
+  epgRotation!(E, R)
 
   return E
 end
 
 """
-    epgRotation(E::EPGStates, R::Matrix)
+    epgRotation!(E::EPGStates, R::Matrix)
 
 applies rotation matrix from `rfRotation` function to the EPGStates
 
@@ -176,7 +176,7 @@ applies rotation matrix from `rfRotation` function to the EPGStates
 * `E::EPGStates``
 * `R::Matrix`           - rotation Matrix (rad)
 """
-function epgRotation(E::EPGStates, R::Matrix)
+function epgRotation!(E::EPGStates, R::Matrix)
   # apply rotation to all states per default
   n = length(E.Z) # numStates
 
