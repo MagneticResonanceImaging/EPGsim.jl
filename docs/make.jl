@@ -23,6 +23,7 @@ makedocs(;
         "Regular EPG " => "regular.md",
         #"Test literate" => "generated/01-autoDiff.md", # generated from literate
         "Automatic Differentiation" => "AD.md",
+        "Examples" => ["MP2RAGE.md"],
         "API" => "API.md",
         
     ],

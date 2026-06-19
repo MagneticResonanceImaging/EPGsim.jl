@@ -1,4 +1,4 @@
-export epgDephasing!,epgRelaxation!,epgRotation!, epgThreshold!
+export epgDephasing!,epgRelaxation!,epgRotation!, epgThreshold!, epgSignal
 export rfRotation
 export EPGStates, getStates
 
@@ -51,6 +51,17 @@ function getStates(E::EPGStates)
     return stack([E.Fp,E.Fn,E.Z],dims=1)
 end
 
+"""
+    epgSignal(E::EPGStates, phase::Real=0.0)
+
+Return the signal corresponding to `E.Fp[1]`. If `phase` is provided (radians),
+the returned value is corrected by multiplying by `exp(-im*phase)`.
+"""
+function epgSignal(E::EPGStates, phase::Real=0.0)
+  return E.Fp[1] * exp(-im*phase)
+end
+
+
 function Base.show(io::IO, E::EPGStates{T} ) where {T}
   println(io, "EPGStates struct with fields : Fp, Fn, Z")
   display(getStates(E))
@@ -94,12 +105,7 @@ function epgDephasing!(E::EPGStates, n::Int=1,threshold::Real=10e-6)
   return E
 end 
 
-#=
-function epgDephasing(E::EPGStates, n::Int,threshold::Real)
-  E = epgDephasing(E, n)
-  E = epgThreshold(E,threshold)
-end
-=#
+
 function epgThreshold!(E::EPGStates,threshold::Real)
   threshold²=threshold^2
   for i in length(E.Fp):-1:2

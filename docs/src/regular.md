@@ -2,6 +2,10 @@ EPG implementation that mimics the regular implementation from Julien Lamy in
 [Sycomore](https://github.com/lamyj/sycomore/blob/master/src/sycomore/epg/Regular.cpp#L342)
 
 # Short description
+EPG implementation that mimics the regular implementation from Julien Lamy in
+[Sycomore](https://github.com/lamyj/sycomore/blob/master/src/sycomore/epg/Regular.cpp#L342)
+
+# Short description
 Regular implementation use a constant positive or negative gradient dephasing.
 We use a vector Fp, Fn and Z to store the states.
 
@@ -52,9 +56,9 @@ They take an `EPGStates` struct as first parameter.
 
 ```@example Regular
 E = EPGStates()
-E = epgRotation(E,deg2rad(60),0)
-E = epgDephasing(E,1)
-E = epgRotation(E,deg2rad(60),deg2rad(117))
+E = epgRotation!(E,deg2rad(60),0)
+E = epgDephasing!(E,1)
+E = epgRotation!(E,deg2rad(60),deg2rad(117))
 ```
 
 !!! note
@@ -76,4 +80,27 @@ E.Fp[2]
 
 ```@example Regular
 getStates(E)
+```
+
+## Signal
+
+The function `epgSignal(E, phase=0.0)` returns the complex signal corresponding to the echo stored in `E.Fp[1]`.
+
+- **Arguments**:
+    - `E` : `EPGStates` instance
+    - `phase` : optional phase correction in radians (default `0.0`). The returned value is multiplied by `exp(-im*phase)`.
+
+Example:
+
+```@example Regular
+E = EPGStates()
+epgRotation!(E, deg2rad(90), 0.0)
+# raw signal from Fp[1]
+s = epgSignal(E)
+
+# phase-corrected signal (phase in radians)
+ph = 0.3
+s_ph = epgSignal(E, ph)
+println("signal: ", s)
+println("phase-corrected: ", s_ph)
 ```

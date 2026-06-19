@@ -35,6 +35,13 @@ end
       0.2857626571584661 + im*0.6732146319308543, 
       0.6819983600624985]
 
+  # test epgSignal and phase correction
+  E = EPGStates()
+  epgRotation!(E,deg2rad(47),deg2rad(23))
+  @test epgSignal(E) ≈ E.Fp[1]
+  ph = 0.3
+  @test epgSignal(E,ph) ≈ E.Fp[1]*exp(-im*ph)
+
   #test positive gradient
   epgDephasing!(E,1)
   @test getStates(E) ≈ [[0, 0, 0.6819983600624985];;
