@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>MP2RAGE LookUpTable · EPGsim.jl</title><meta name="title" content="MP2RAGE LookUpTable · EPGsim.jl"/><meta property="og:title" content="MP2RAGE LookUpTable · EPGsim.jl"/><meta property="twitter:title" content="MP2RAGE LookUpTable · EPGsim.jl"/><meta name="description" content="Documentation for EPGsim.jl."/><meta property="og:description" content="Documentation for EPGsim.jl."/><meta property="twitter:description" content="Documentation for EPGsim.jl."/><meta property="og:url" content="https://MagneticResonanceImaging.github.io/EPGsim.jl/MP2RAGE/"/><meta property="twitter:url" content="https://MagneticResonanceImaging.github.io/EPGsim.jl/MP2RAGE/"/><link rel="canonical" href="https://MagneticResonanceImaging.github.io/EPGsim.jl/MP2RAGE/"/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../">EPGsim.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><a class="tocitem" href="../regular/">Regular EPG </a></li><li><a class="tocitem" href="../AD/">Automatic Differentiation</a></li><li><span class="tocitem">Examples</span><ul><li class="is-active"><a class="tocitem" href>MP2RAGE LookUpTable</a><ul class="internal"><li><a class="tocitem" href="#Introduction"><span>Introduction</span></a></li><li><a class="tocitem" href="#Definition-of-MP2RAGE-acquisition-parameters"><span>Definition of MP2RAGE acquisition parameters</span></a></li><li><a class="tocitem" href="#Generate-the-LUT-with-EPG"><span>Generate the LUT with EPG</span></a></li><li><a class="tocitem" href="#Build-the-Lookuptable-with-the-bloch-simulation"><span>Build the Lookuptable with the bloch simulation</span></a></li><li><a class="tocitem" href="#Comparison"><span>Comparison</span></a></li></ul></li></ul></li><li><a class="tocitem" href="../API/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Examples</a></li><li class="is-active"><a href>MP2RAGE LookUpTable</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>MP2RAGE LookUpTable</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/MagneticResonanceImaging/EPGsim.jl/blob/main/docs/src/MP2RAGE.md#" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="MP2RAGE-LookUpTable"><a class="docs-heading-anchor" href="#MP2RAGE-LookUpTable">MP2RAGE LookUpTable</a><a id="MP2RAGE-LookUpTable-1"></a><a class="docs-heading-anchor-permalink" href="#MP2RAGE-LookUpTable" title="Permalink"></a></h1><h2 id="Introduction"><a class="docs-heading-anchor" href="#Introduction">Introduction</a><a id="Introduction-1"></a><a class="docs-heading-anchor-permalink" href="#Introduction" title="Permalink"></a></h2><p>The MP2RAGE sequence has been published by <a href="https://doi.org/10.1016/j.neuroimage.2009.10.002">Marques et al</a> and is used to generate a T1 map from two images acquired at two different inversion time points.</p><p>First the images are combined with the following equation : <span>$\mathrm{UNI} = \operatorname{Re}\!\left(\frac{S_1\,\overline{S_2}}{|S_1|^2 + |S_2|^2}\right)$</span></p><p>Then the value are compared to a lookuptable (LUT) which can be calculated using the bloch equations.</p><h2 id="Definition-of-MP2RAGE-acquisition-parameters"><a class="docs-heading-anchor" href="#Definition-of-MP2RAGE-acquisition-parameters">Definition of MP2RAGE acquisition parameters</a><a id="Definition-of-MP2RAGE-acquisition-parameters-1"></a><a class="docs-heading-anchor-permalink" href="#Definition-of-MP2RAGE-acquisition-parameters" title="Permalink"></a></h2><ul><li>TI1 = 800 # ms</li><li>TI2 = 2200 # ms</li><li>TR = 7 # ms</li><li>MP2RAGE_TR = 5000 # ms</li><li>ETL = 128</li><li>a1 = 4 # flip angle of first readout train</li><li>a2 = 7 # flip angle of first readout train</li></ul><p>we will store them in a struct :</p><pre><code class="language-julia hljs">struct ParamsMP2RAGE
+    TI1::Float64
+    TI2::Float64
+    TR::Float64
+    MP2RAGE_TR::Float64
+    ETL::Int
+    a1::Float64
+    a2::Float64
+end
+
+p = ParamsMP2RAGE(
+800, # ms - TI1
+2200, # ms - TI2
+7, # ms - TR
+5000, # ms - MP2RAGE_TR
+128, # ETL
+4, # degree - flip angle of first readout train
+7 # degree - flip angle of first readout train
+)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Main.ParamsMP2RAGE(800.0, 2200.0, 7.0, 5000.0, 128, 4.0, 7.0)</code></pre><h2 id="Generate-the-LUT-with-EPG"><a class="docs-heading-anchor" href="#Generate-the-LUT-with-EPG">Generate the LUT with EPG</a><a id="Generate-the-LUT-with-EPG-1"></a><a class="docs-heading-anchor-permalink" href="#Generate-the-LUT-with-EPG" title="Permalink"></a></h2><pre><code class="language-julia hljs">using EPGsim
+using CairoMakie
+
+function mp2rage_lookuptable_epg(p::ParamsMP2RAGE;T1Range=1:1:10000,effInv = 1.00, rf_spoiling_inc = 117.0, Spoiler = 10,  N_SS = 1, T2 = 100.0, TE = 3.0
+)
+    TI1 =p.TI1
+    TI2 =p.TI2
+    TR = p.TR
+    MP2RAGE_TR = p.MP2RAGE_TR
+    ETL = p.ETL
+    a1 = p.a1
+    a2 = p.a2
+
+    ## Calcul inner delays
+    dTI1 = TI1 - (ETL/2-1)*TR
+    dTI2 = TI2 - TI1 - ETL*TR
+    dTR = MP2RAGE_TR - (TI2 + (ETL/2)*TR)
+
+
+    ## initial empty vector that will store the value
+    M_TI1 = []
+    M_TI2 = []
+    for T1 in T1Range # compute the value of the UNI signal for each T1 value
+    E = EPGStates(0,0,1) # initialize the signal with all the magnetization along the Z axis
+
+    for MP2_TR = 1:N_SS # Dummy scans loop
+        rf_1_phase = 0.0
+        rf_1_inc = 0.0
+
+        epgRotation!(E,deg2rad(180.0*effInv),deg2rad(0.0)) # Inversion pulse : first arguement is the flip angle and second is the RF phase.
+        epgDephasing!(E,10) # spoiling
+        epgRelaxation!(E,dTI1,T1,T2) #relaxation between each  inversion pulse and the beginning of the first echo train
+        for i in 1:ETL
+            # RF phase increment
+            rf_phase = copy(rf_1_phase)
+            rf_1_inc = mod(rf_1_inc + rf_spoiling_inc,360.0)
+            rf_1_phase = mod(rf_1_phase + rf_1_inc,360.0)
+            epgRotation!(E,deg2rad(a1),deg2rad(rf_phase)) # excitation
+            epgRelaxation!(E,TE,T1,T2) # relaxation to TE
+            if i == ETL/2 &amp;&amp; MP2_TR == N_SS
+                push!(M_TI1,epgSignal(E,deg2rad(rf_phase))) # cancel phase generated by rf_spoiling
+            end
+            epgRelaxation!(E,TR-TE,T1,T2) # relaxation after TE
+            epgDephasing!(E,Spoiler) # Spoiler
+        end
+
+        epgRelaxation!(E,dTI2,T1,T2)
+
+        for i in 1:ETL
+            rf_phase = copy(rf_1_phase)
+            rf_1_inc = mod(rf_1_inc + rf_spoiling_inc,360.0)
+            rf_1_phase = mod(rf_1_phase + rf_1_inc,360.0)
+            epgRotation!(E,deg2rad(a2),deg2rad(rf_phase))
+            epgRelaxation!(E,TE,T1,T2)
+            if i == ETL/2 &amp;&amp; MP2_TR == N_SS
+                push!(M_TI2, epgSignal(E,deg2rad(rf_phase))) # cancel phase generated by rf_spoiling
+            end
+            epgRelaxation!(E,TR-TE,T1,T2)
+            epgDephasing!(E,Spoiler)
+        end
+
+        epgRelaxation!(E,dTR,T1,T2)
+    end
+    end
+
+    LUT_UNI = real.(M_TI1.*conj.(M_TI2)) ./ (abs.(M_TI1).^2 .+ abs.(M_TI2).^2) # UNI combinaison
+
+
+    return LUT_UNI, T1Range, M_TI1, M_TI2
+end
+
+T1Range = 0:10:5000
+LUT_EPG, _ = mp2rage_lookuptable_epg(p::ParamsMP2RAGE;T1Range=T1Range,effInv = 1.00, rf_spoiling_inc = 117.0, Spoiler = 10,  N_SS = 4, T2 = 100.0, TE = 3.0
+)
+
+lines(T1Range,LUT_EPG)</code></pre><img src="8036637e.png" alt="Example block output"/><h2 id="Build-the-Lookuptable-with-the-bloch-simulation"><a class="docs-heading-anchor" href="#Build-the-Lookuptable-with-the-bloch-simulation">Build the Lookuptable with the bloch simulation</a><a id="Build-the-Lookuptable-with-the-bloch-simulation-1"></a><a class="docs-heading-anchor-permalink" href="#Build-the-Lookuptable-with-the-bloch-simulation" title="Permalink"></a></h2><p>The original paper use a solution based on bloch equation and finding the steady-state signal</p><blockquote><p><strong>Warning:</strong> the Bloch-based LUT can show instabilities at the beginning of the T1 range, where the denominator becomes small and the ratio is sensitive to numerical error. Use care when interpreting low-T1 values and consider masking or regularizing this region.</p></blockquote><pre><code class="language-julia hljs">function mp2rage_lookuptable_cartesian(p::ParamsMP2RAGE;T1Range=1:0.5:10000,effInv = 0.96)
+    TI1 =p.TI1
+    TI2 =p.TI2
+    TR = p.TR
+    MP2RAGE_TR = p.MP2RAGE_TR
+    n = p.ETL
+    α₁ = p.a1
+    α₂ = p.a2
+
+    # compute exponential decay
+    E1=vec(exp.(-TR./T1Range))
+    EA=vec(exp.(-(TI1-(n./2-1).*TR)./T1Range))
+    EB=vec(exp.(-(TI2-TI1-n.*TR)./T1Range))
+    EC=vec(exp.(-(MP2RAGE_TR.-(TI2+(n./2).*TR))./T1Range))
+
+    # compute mzss =[(B).*(cosd(α₂).*E1).^n+A].*EC+(1-EC);
+    B = ((1 .- EA).*(cosd(α₁).*E1).^n + (1 .- E1).*(1 .- (cosd(α₁).*E1).^n)./(1 .- cosd(α₁).*E1)).*EB+(1 .- EB)
+    A = (1 .- E1).*((1 .- (cosd(α₂).*E1).^n)./(1 .- cosd(α₂).*E1))
+
+    mzss_num=((B).*(cosd(α₂).*E1).^n+A).*EC+(1 .-EC)
+    mzss_denom=(1 .+ effInv.*(cosd(α₁).*cosd(α₂)).^n .* exp.(-MP2RAGE_TR./T1Range))
+    mzss=mzss_num./mzss_denom
+
+    # compute GRE1= sind(α₁).*(A.*(cosd(α₁).*E1).^(n./2-1)+B)
+    A=-effInv.*mzss.*EA+(1 .- EA)
+    B=(1 .- E1).*(1 .- (cosd(α₁).*E1).^(n./2-1))./(1 .- cosd(α₁).*E1)
+    GRE1=sind(α₁).*(A.*(cosd(α₁).*E1).^(n./2-1)+B)
+
+    # compute GRE2= sind(α₂).*(A-B)
+    A=(mzss-(1 .- EC))./(EC.*(cosd(α₂).*E1).^(n./2))
+    B=(1 .- E1).*((cosd(α₂).*E1).^(-n./2) .- 1)./(1 .- cosd(α₂).*E1)
+
+    GRE2=sind(α₂).*(A-B)
+
+    lookUpTable=GRE2.*GRE1./(GRE1.*GRE1+GRE2.*GRE2)
+    lookUpTable[isnan.(lookUpTable)].= 0
+    return lookUpTable, T1Range, GRE1, GRE2
+end
+
+
+LUT_bloch, _ = mp2rage_lookuptable_cartesian(p::ParamsMP2RAGE;T1Range=T1Range,effInv = 1.0)
+lines(T1Range, LUT_bloch)</code></pre><img src="eccec0c9.png" alt="Example block output"/><h2 id="Comparison"><a class="docs-heading-anchor" href="#Comparison">Comparison</a><a id="Comparison-1"></a><a class="docs-heading-anchor-permalink" href="#Comparison" title="Permalink"></a></h2><pre><code class="language-julia hljs">begin
+f=Figure()
+ax=Axis(f[1,1],title = &quot;EPG&quot;)
+lines!(ax,T1Range,LUT_EPG,color=:red,label=&quot;LUT EPG&quot;)
+lines!(ax,T1Range,LUT_bloch,color = :black,linewidth=5,linestyle =:dot,label = &quot;LUT bloch &quot;)
+axislegend()
+f
+end</code></pre><img src="a41a43ca.png" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../AD/">« Automatic Differentiation</a><a class="docs-footer-nextpage" href="../API/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Sunday 21 June 2026 13:19">Sunday 21 June 2026</span>. Using Julia version 1.12.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
