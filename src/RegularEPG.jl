@@ -77,7 +77,7 @@ function epgDephasing!(E::EPGStates, n::Int=1,threshold::Real=10e-6)
   
   if(abs(n)>1)
     for i in 1:abs(n)
-      E = epgDephasing!(E, (n > 0 ? +1 : -1))
+      epgDephasing!(E, (n > 0 ? +1 : -1))
     end
   elseif(n == 1 || n == -1)
     push!(E.Fp,0)
@@ -101,7 +101,7 @@ function epgDephasing!(E::EPGStates, n::Int=1,threshold::Real=10e-6)
     end
 
   end
-  E = epgThreshold!(E,threshold)
+  epgThreshold!(E,threshold)
   return E
 end 
 
